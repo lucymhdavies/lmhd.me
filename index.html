@@ -23,7 +23,7 @@ layout: default
       </div>
 
       <div class="entry">
-        {{ post.excerpt }}
+        {{ post.excerpt | strip_footnotes }}
       </div>
 
       <a href="{{ site.baseurl }}{{ post.url }}" class="button button-primary">Read More</a>

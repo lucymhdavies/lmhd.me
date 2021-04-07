@@ -6,11 +6,14 @@ author:      Lucy Davinhart
 date:        2021-04-07 18:30:00
 category:    tech
 tags:        [terraform, terraform cloud, vault]
+excerpt_separator: <!--more-->
 ---
 
 So I've had my own personal Vault for ages...
 
 And a couple of years ago, I spoke at HashiConf[^1] about how we[^2] manage our Vault configuration with Terraform. So it feels like it's about time I get around to doing something similar for my own Vault.
+
+<!--more-->
 
 For now, I'm not gonna do anything fancy; I just want bare minimum Vault Terraformability.
 
