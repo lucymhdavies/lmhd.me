@@ -238,7 +238,6 @@ Terraform will perform the following actions:
     }
 
 Plan: 1 to add, 0 to change, 0 to destroy.
-
 ```
 
 I'm asked to confirm before it applies anything, and then we see that the Apply has been successful.
