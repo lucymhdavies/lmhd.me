@@ -218,7 +218,7 @@ In the Runs tab, we can trigger a new plan:
 I'm redirected to the Run details page for this Plan, and pretty quickly I can see that Terraform wants to make some changes:
 
 ```
-Terraform v0.14.9
+Terraform v0.14.9
 Configuring remote state backend...
 Initializing Terraform configuration...
 
@@ -244,7 +244,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 I'm asked to confirm before it applies anything, and then we see that the Apply has been successful.
 
 ```
-Terraform v0.14.9
+Terraform v0.14.9
 vault_generic_secret.example: Creating...
 vault_generic_secret.example: Creation complete after 1s [id=kv/terraform]
 
@@ -260,7 +260,7 @@ And to make sure it's persisting state and reading from Vault, I'm going modify 
 This time we see the plan:
 
 ```
-Terraform v0.14.9
+Terraform v0.14.9
 Configuring remote state backend...
 Initializing Terraform configuration...
 vault_generic_secret.example: Refreshing state... [id=kv/terraform]
