@@ -3,7 +3,7 @@ layout:      post
 title:       Vault Terraform Cloud Init
 description: Setting up a Terraform Cloud workspace to manage Vault congfiguration
 author:      Lucy Davinhart
-date:        2021-04-07 19:00:00
+date:        2021-04-07 18:30:00
 category:    tech
 tags:        [terraform, terraform cloud, vault]
 ---
