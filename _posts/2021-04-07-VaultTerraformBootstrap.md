@@ -213,7 +213,7 @@ And that should be everything.
 
 In the Runs tab, we can trigger a new plan:
 
-![Terraform Cloud, Que plan manually dropdown](/images/posts/2021-04-07/tfc-07-trigger-plan.png)
+![Terraform Cloud, queue plan manually dropdown](/images/posts/2021-04-07/tfc-07-trigger-plan.png)
 
 I'm redirected to the Run details page for this Plan, and pretty quickly I can see that Terraform wants to make some changes:
 
