@@ -527,7 +527,7 @@ And adding another 1000?
 Pretty good.
 
 
-![Terraform Cloud, 1000 resources added, in a few minutes](/images/posts/2021-05-26/tfc_01.png)
+![Terraform Cloud, 1000 resources added, in a few minutes](/images/posts/2021-05-26/tfc_1.png)
 
 
 And to delete them all once I'm done?
@@ -537,7 +537,7 @@ About a minute and a half, end-to-end.
 Dang that's great!
 
 
-![Terraform Cloud, 2000 resources destroyed, in a few minutes](/images/posts/2021-05-26/tfc_02.png)
+![Terraform Cloud, 2000 resources destroyed, in a few minutes](/images/posts/2021-05-26/tfc_2.png)
 
 
 
