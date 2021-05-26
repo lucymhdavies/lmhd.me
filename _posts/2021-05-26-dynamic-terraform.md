@@ -3,7 +3,7 @@ layout:      post
 title:       Adventures in Dynamic Terraform
 description: For when I'm too lazy to write my own Terraform code
 author:      Lucy Davinhart
-date:        2021-05-26 17:25:00
+date:        2021-05-26 17:45:00
 category:    tech
 tags:        [terraform, terraform cloud, vault, aws]
 excerpt_separator: <!--more-->
