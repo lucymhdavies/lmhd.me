@@ -33,7 +33,7 @@ Which is where Terraform comes in!
 
 Before we can create some DNS records, we need a [hosted zone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_zone)
 
-It's prety simple to create one. Just needs name:
+It's prety simple to create one. Just needs a name:
 
 ```
 resource "aws_route53_zone" "lmhd-me" {
@@ -41,7 +41,7 @@ resource "aws_route53_zone" "lmhd-me" {
 }
 ```
 
-I will want to delegate the test subdomain to a different zone:
+I will want to delegate the test subdomain to a different zone too:
 
 ```
 resource "aws_route53_record" "lmhd-me_NS_test-lmhd-me" {
@@ -54,7 +54,7 @@ resource "aws_route53_record" "lmhd-me_NS_test-lmhd-me" {
 }
 ```
 
-I don't _need_ to do that, but I like that separation, and gives me the flexibilty to move that to an entirely different AWS account (or somewhere else) in future.
+I don't _need_ to do that, but I like that separation, and it gives me the flexibilty to move that to an entirely different AWS account (or somewhere else) in future.
 
 The first problem I encounted almost immediately was that you can't do CNAMEs on apex domains, and I wanted to do something for [lmhd.me](https://lmhd.me).
 
@@ -104,9 +104,9 @@ resource "aws_route53_record" "widgets-lmhd-me-CNAME-record" {
 
 # Okay, this is getting tedious
 
-I'm ~~lazy~~ efficient to have to write out all of that every time I want to add something.
+I'm ~~lazy~~ efficient, so I don't want to have to write out all of that every time I want to add something.
 
-Can I make it easier on myself?
+Can we make it easier on ourselves?
 
 What if we make TF Variables out of this?
 
@@ -145,6 +145,8 @@ resource "aws_route53_record" "lmhd_record" {
   records  = each.value.records
 }
 ```
+
+This makes use of Terraform's [for_each](https://www.terraform.io/docs/language/meta-arguments/for_each.html) Meta-Argument, so rather than defining a Terraform resource for every DNS record, I define a single resource and update the variable instead.
 
 And our plan looks like this:
 
@@ -371,7 +373,7 @@ That last bit, if we do not specify any records in our YAML file, Terraform spit
 Which is okay. You can figure out what's gone wrong there.
 
 
-We can't add custom error messages, because we can't use (validation blocks)[https://www.terraform.io/docs/language/values/variables.html#custom-validation-rules], as those don't exist for resources, only variables.
+We can't add custom error messages, because we can't use [validation blocks](https://www.terraform.io/docs/language/values/variables.html#custom-validation-rules), as those don't exist for resources, only variables.
 
 
 
@@ -398,7 +400,7 @@ And besides the obvious answer of "I'm doing this because it's fun...
 
 It actually does have some valid use-cases.
 
-A couple years ago I did a talk at HashiConf about how we generate Terraform code for our Vault config.
+A couple years ago I did a talk at HashiConf about how we generate Terraform code for our Vault configuration.
 
 You can watch it here later:
 
@@ -426,7 +428,7 @@ So let's see if I can improve that with some sort of dynamic Terraform like we'v
 
 Let's start with policies, as those are the easiest to conceptualise.
 
-It's just one file, and you want the content of those files to become policies in Vault.
+It's just one file, and you want the content of each of those files to become policies in Vault.
 
 ```
 #
@@ -469,18 +471,18 @@ Hey! That looks pretty good 😀
 One thing to note though is I've had to manually remove the existing policies from Terraform State, so that Terraform doesn't delete anything. e.g.
 
 ```
-$ lucli terraform state rm vault_policy.vault_terraform
+$ terraform state rm vault_policy.vault_terraform
 Acquiring state lock. This may take a few moments...
 Removed vault_policy.vault_terraform
 Successfully removed 1 resource instance(s).
 
-$ lucli terraform state rm vault_policy.default
+$ terraform state rm vault_policy.default
 Acquiring state lock. This may take a few moments...
 Removed vault_policy.default
 Successfully removed 1 resource instance(s).
 ```
 
-I could re-import those policies into the TF state if I wanted to, so the resulting Terraform plan is a no-op... but as writing Vault policies is idempotent, I'm not really bothered for the moment.
+I could re-import those policies into the Terraform state if I wanted to, so the resulting Terraform plan is a no-op... but as writing Vault policies is idempotent, I'm not really bothered for the moment.
 
 Something I would definitely want to do in a Production environment though.
 
@@ -489,7 +491,7 @@ Something I would definitely want to do in a Production environment though.
 
 ## Let's load test this for funsies!
 
-As we've added more things to our Vault Terraform pipeline at work, the amount of time it takes for Terraform to run the plan is... well, it's longer than I'd like.
+As we've added more things to our Vault Terraform pipeline at work, the amount of time it takes for the pipeline to run end-to-end is... well, it's longer than I'd like.
 
 So what if we had like... 10k policies?
 
@@ -508,11 +510,11 @@ Yeah, let's just casually add about 5MiB to this git repo. No big deal. 😎
 Writing objects: 100% (10003/10003), 528.05 KiB | 5.33 MiB/s, done.
 ```
 
-Unsurprisingly, simply cloning this chonky boi took TFC quite a while.
+Unsurprisingly, simply cloning this chonky boi took Terraform Cloud quite a while.
 
-Wasn't until about 4 minutes in that it actually started planning anything.
+It wasn't until about 4 minutes in that it actually started planning anything.
 
-Maybe I should at least give it a chance with a smaller set first, and go from there.
+So... maybe I should at least give it a chance with a smaller set first, and go from there.
 
 With a mere 1000 test policies, it took under a minue to Plan, and a similar amount of time to Apply.
 
