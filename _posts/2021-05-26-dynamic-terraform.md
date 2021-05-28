@@ -20,6 +20,8 @@ So what if I didn't need to write Terraform code?
 
 So this whole story starts with me looking to manage my DNS records better.
 
+I wrote a whole blog post about it if you're interested: [Moving my DNS records to Route 53 with Terraform]({% post_url 2017-04-02-dns-under-one-roof %})
+
 I was modifying them by hand in our domain registrar's own DNS settings page... and it was kinda a pain.
 
 At work we use AWS Route 53 for some DNS records, so I was familiar with how that worked, and it seemed like a good idea to move to that too. Not because managing DNS records in Route 53 by hand is much easier, but it opened up the possibility for automating it.
