@@ -12,6 +12,6 @@ Yes, that technically makes my initials LMHAD, but LMHD rolls off the tongue bet
 
 See also: [my name api](https://github.com/lucymhdavies/whoami)
 
-## Wait... Davies? Davinhart? Which is it?
+## Strawb System?
 
-![Why not both](/images/both.gif)
+Yep. We're plural. For more info on what that means, see [MoreThanOne.info](https://morethanone.info/), or check out our [System Hub](https://system.straw.be)
