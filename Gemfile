@@ -7,3 +7,4 @@ gem "jekyll-feed", '>=0.11.0'
 gem "jekyll-paginate"
 gem "kramdown-parser-gfm"
 gem "nokogiri"
+gem "webrick"

@@ -209,6 +209,10 @@ img {
   @include mobile {
     margin: 3px 0;
   }
+
+  a {
+    color: $darkerGray;
+  }
 }
 
 nav {
