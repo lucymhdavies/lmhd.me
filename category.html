@@ -38,7 +38,7 @@ Here we generate all the categories.
 </p>
 
 {% for ct in cats %}
-<h2 id="{{ ct | slugify }}">{{ ct }}</h2>
+<h2 id="{{ ct | slugify }}">{{ ct }} <a href="/feed/{{ ct | slugify }}.xml"><i class="fas fa-rss"></i></a></h2>
 <ul class="codinfox-category-list">
   {% for post in site.posts %}
   {% if post.category contains ct %}
