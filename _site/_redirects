@@ -1,0 +1,2 @@
+# Fuck with people who try to check for a wordpress admin page
+/wp-login.php http://speed.hetzner.de/10GB.bin
