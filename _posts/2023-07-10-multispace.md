@@ -3,7 +3,7 @@ layout:      post
 title:       "Terraform apply as code: The multispace pattern"
 description: How I use the Terraform Cloud/Enterprise provider to coordinate applies and destroys on downstream workspaces in Terraform Cloud
 author:      Lucy Davinhart
-date:        2023-01-01 00:00:00
+date:        2023-07-10 12:00:00
 category:    tech
 tags:        [terraform, terraform cloud]
 excerpt_separator: <!--more-->
