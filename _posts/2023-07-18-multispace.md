@@ -7,6 +7,8 @@ date:        2023-01-01 00:00:00
 category:    tech
 tags:        [terraform, terraform cloud]
 excerpt_separator: <!--more-->
+crosspost_origin: https://www.hashicorp.com/blog/terraform-apply-as-code-the-multispace-pattern
+crosspost_text: This article was [originally posted on the HashiCorp Blog](https://www.hashicorp.com/blog/terraform-apply-as-code-the-multispace-pattern).
 ---
 
 Terraform Apply... as a Terraform resource. Sounds fun, right? Let's see how it works.
@@ -31,10 +33,10 @@ Terraform Cloud has a feature called [run triggers](https://developer.hashicorp.
 
 
 
-<p id="gdcalert1" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image1.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert2">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
 
 
-![alt_text](images/image1.png "image_tooltip")
+![no alt text](/images/posts/2023-07-10/multispace_blog-d1-1-up-many-down.png)
+
 
 
 This alone solves some dependency challenges and is great for simple workflows. If it works for your use case, you should use it.
