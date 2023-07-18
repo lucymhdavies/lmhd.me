@@ -43,7 +43,7 @@ This alone solves some dependency challenges and is great for simple workflows. 
 
 However, it doesn’t address all situations, which is why Mitchell Hashimoto created the [multispace provider](https://registry.terraform.io/providers/mitchellh/multispace/latest/docs) to handle the kind of cascading creation/destruction workflows that can’t be done with simple run triggers. His example use case involves creating a Kubernetes stack: first you create the underlying virtual machines, then the core kubernetes services, DNS, and ingress. Each of these is its own separate workspace.
 
-This initial implementation has since been refined and incorporated into the official Terraform Cloud/Enterprise provider (also called the “TFE provider”) in the form of the [`tfe_workspace_run`](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/workspace_run)resource.
+This initial implementation has since been refined and incorporated into the official Terraform Cloud/Enterprise provider (also called the “TFE provider”) in the form of the [`tfe_workspace_run`](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/workspace_run) resource.
 
 For clarity, this post uses the following terminology when referring to the roles a workspace could have in multi-workspace deployments (an individual workspace may have one or more of these roles):
 
