@@ -5,9 +5,8 @@ description: How I use the Terraform Cloud/Enterprise provider to coordinate app
 author:      Lucy Davinhart
 date:        2023-07-10 12:00:00
 category:    tech
-tags:        [terraform, terraform cloud]
+tags:        [terraform, terraform cloud, crosspost]
 excerpt_separator: <!--more-->
-crosspost_origin: https://www.hashicorp.com/blog/terraform-apply-as-code-the-multispace-pattern
 crosspost_text: This article was [originally posted on the HashiCorp Blog](https://www.hashicorp.com/blog/terraform-apply-as-code-the-multispace-pattern).
 ---
 
