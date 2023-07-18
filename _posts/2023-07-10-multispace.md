@@ -109,11 +109,14 @@ resource "tfe_workspace_run" "ws_run_parent" {
   workspace_id = "ws-fSX576JZGENVaeMi"
  
   apply {
-    # tfe_workspace_run is responsible for approving the apply part of the run
-    # this is the only required argument in the apply{} and destroy{} blocks
+    # tfe_workspace_run is responsible for approving the apply
+    # part of the run
+    # this is the only required argument in the apply{} and
+    # destroy{} blocks
     manual_confirm    = false
  
-    # if the run fails, try again, up to 3 times, waiting between 1 and 30 seconds
+    # if the run fails, try again, up to 3 times, waiting between
+    # 1 and 30 seconds
     # this is the default behaviour, presented here for clarity
     wait_for_run      = true
     retry_attempts    = 3
@@ -173,13 +176,9 @@ By including the `destroy{}` block in combination with `depends_on`, you can ens
 
 If you do not include a `destroy{}` block, then attempting to delete the downstream workspace will result in an error like this:
 
-```
-╷
-│ Error: error deleting workspace ws-BxxKPnyBVpxwVQB1: This workspace has 4 resources under management and must be force deleted by setting force_delete = true
-│
-│
-╵
-```
+`Error: error deleting workspace ws-BxxKPnyBVpxwVQB1: This
+workspace has 4 resources under management and must be force
+deleted by setting force_delete = true`
 
 If you do not include the `depends_on`, then dependencies such as variables and credentials that the downstream workspace needs will end up getting deleted too early.
 
