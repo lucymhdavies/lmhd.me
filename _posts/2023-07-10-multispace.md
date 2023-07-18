@@ -56,10 +56,7 @@ For clarity, this post uses the following terminology when referring to the role
 
 
 
-<p id="gdcalert2" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image2.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert3">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image2.png "image_tooltip")
+![no alt text](/images/posts/2023-07-10/multispace_blog-d2-terminology.png)
 
 
 
@@ -71,10 +68,7 @@ With `tfe_workspace_run` you can specify when to apply and under what circumstan
 
 
 
-<p id="gdcalert3" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image3.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert4">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image3.png "image_tooltip")
+![no alt text](/images/posts/2023-07-10/multispace_blog-d3-many-up-1-down.png)
 
 
 You can use the `tfe_workspace_run` resource in two operational modes:
@@ -83,20 +77,14 @@ You can use the `tfe_workspace_run` resource in two operational modes:
 
 
 
-<p id="gdcalert4" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image4.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert5">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image4.png "image_tooltip")
+![no alt text](/images/posts/2023-07-10/multispace_blog-d5-fire-forget.png)
 
 
 **Wait**: The resource queues a run on the downstream workspace and waits for it to successfully apply. After a successful plan, the resource can wait for a human approval on the apply or initiate the apply itself. Optionally, the resource can retry if the apply fails.
 
 
 
-<p id="gdcalert5" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image5.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert6">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image5.png "image_tooltip")
+![no alt text](/images/posts/2023-07-10/multispace_blog-d4-wait.png)
 
 
 
@@ -133,10 +121,7 @@ From the perspective of the workspace runner, it doesn’t need to care if the d
 
 
 
-<p id="gdcalert6" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image6.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert7">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image6.png "image_tooltip")
+![no alt text](/images/posts/2023-07-10/multispace_blog-s1-apply.png)
 
 
 By including the `destroy{}` block in combination with `depends_on`, you can ensure that the workspace and supporting resources remain untouched until the downstream workspace has successfully destroyed all the resources it manages.
@@ -150,7 +135,7 @@ If you do not include the `depends_on`, then dependencies such as variables and 
 <p id="gdcalert7" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image7.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert8">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
 
 
-![alt_text](images/image7.png "image_tooltip")
+![no alt text](/images/posts/2023-07-10/multispace_blog-s2-destroy.png)
 
 
 The upcoming [ephemeral workspaces](https://www.hashicorp.com/blog/new-terraform-cloud-capabilities-to-import-view-and-manage-infrastructure) will ensure the entire stack of workspaces is safely destroyed in the correct order once the ephemeral workspace hits its time-to-live (TTL).
@@ -177,10 +162,7 @@ Some examples, first a simple one, then a complex one:
 
 
 
-<p id="gdcalert8" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image8.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert9">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image8.png "image_tooltip")
+![no alt text](/images/posts/2023-07-10/multispace_blog-d6-chain.png)
 
 
 
@@ -193,10 +175,7 @@ Of course, there’s no reason you’re limited to each workspace having one ups
 
 
 
-<p id="gdcalert9" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image9.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert10">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image9.png "image_tooltip")
+![no alt text](/images/posts/2023-07-10/multispace_blog-d7-mesh.png)
 
 
 
