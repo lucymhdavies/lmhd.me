@@ -12,8 +12,6 @@ crosspost_text: This article was <a href="https://www.hashicorp.com/blog/terrafo
 
 Terraform Apply... as a Terraform resource. Sounds fun, right? Let's see how it works.
 
-This article was [originally posted on the HashiCorp Blog](https://www.hashicorp.com/blog/terraform-apply-as-code-the-multispace-pattern).
-
 <!--more-->
 
 
