@@ -7,7 +7,7 @@ date:        2023-07-10 12:00:00
 category:    tech
 tags:        [terraform, terraform cloud, crosspost]
 excerpt_separator: <!--more-->
-crosspost_text: This article was [originally posted on the HashiCorp Blog](https://www.hashicorp.com/blog/terraform-apply-as-code-the-multispace-pattern).
+crosspost_text: This article was <a href="https://www.hashicorp.com/blog/terraform-apply-as-code-the-multispace-pattern">originally posted on the HashiCorp Blog</a>.
 ---
 
 Terraform Apply... as a Terraform resource. Sounds fun, right? Let's see how it works.
