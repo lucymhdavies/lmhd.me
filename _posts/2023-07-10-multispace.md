@@ -104,6 +104,29 @@ While you can configure both the apply and destroy behavior for the downstream w
 
 The <code>[tfe_workspace_run resource](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/workspace_run)</code> documentation on the Terraform Registry includes a few example code snippets to use as a starting point. At its most basic, the resource looks like this:
 
+```
+resource "tfe_workspace_run" "ws_run_parent" {
+  workspace_id = "ws-fSX576JZGENVaeMi"
+ 
+  apply {
+    # tfe_workspace_run is responsible for approving the apply part of the run
+    # this is the only required argument in the apply{} and destroy{} blocks
+    manual_confirm    = false
+ 
+    # if the run fails, try again, up to 3 times, waiting between 1 and 30 seconds
+    # this is the default behaviour, presented here for clarity
+    wait_for_run      = true
+    retry_attempts    = 3
+    retry_backoff_min = 1
+    retry_backoff_max = 30
+  }
+ 
+  destroy {
+    manual_confirm    = false
+  }
+}
+```
+
 This example shows what’s meant by a _workspace runner_. For the specified workspace, our `tfe_workspace_run` resource will trigger an apply, wait for that to complete, then consider the `tfe_workspace_run` successfully created. On destroy, the `tfe_workspace_run` will trigger a destroy, wait for that to complete, then consider the `tfe_workspace_run` successfully destroyed.
 
 Because we are using the TFE provider, the workspace runner requires a `TFE_TOKEN` with sufficient permissions to kick off plan/apply/destroy runs on child workspaces. (You may wish to use the [Terraform Cloud secrets engine](https://developer.hashicorp.com/vault/tutorials/secrets-management/terraform-secrets-engine) in HashiCorp Vault to generate these, but that is out-of-scope for this blog post.)
@@ -117,6 +140,28 @@ The `tfe_workspace_run` resource is most useful when creating new workspaces. Th
 
 As a reminder, the term “workspace creator” refers to any workspace responsible for creating other workspaces and related resources. In most cases when using a workspace creator, it will also be a workspace runner for the workspaces it creates (i.e. it is responsible for triggering applies and/or destroys on those workspaces).
 
+```
+resource "tfe_workspace_run" "downstream" {
+  workspace_id = tfe_workspace.downstream.id
+ 
+  # depends_on = creds and other workspace dependencies go here
+ 
+  apply {
+    # Fire and Forget
+    wait_for_run = false
+    # auto-apply
+    manual_confirm = false
+  }
+ 
+  destroy {
+    # Wait for destroy before doing anything else
+    wait_for_run = true
+    # auto-apply
+    manual_confirm = false
+  }
+}
+```
+
 From the perspective of the workspace runner, it doesn’t need to care if the downstream workspace was successfully applied, just that an apply was attempted. This functionality alone is achievable with run triggers (and in this fire-and-forget mode, the behavior is very similar), but as this example is already using `tfe_workspace_run` to handle the destroy, it makes sense to use it for the apply as well.
 
 
@@ -128,11 +173,15 @@ By including the `destroy{}` block in combination with `depends_on`, you can ens
 
 If you do not include a `destroy{}` block, then attempting to delete the downstream workspace will result in an error like this:
 
+```
+╷
+│ Error: error deleting workspace ws-BxxKPnyBVpxwVQB1: This workspace has 4 resources under management and must be force deleted by setting force_delete = true
+│
+│
+╵
+```
+
 If you do not include the `depends_on`, then dependencies such as variables and credentials that the downstream workspace needs will end up getting deleted too early.
-
-
-
-<p id="gdcalert7" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image7.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert8">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
 
 
 ![no alt text](/images/posts/2023-07-10/multispace_blog-s2-destroy.png)
@@ -144,6 +193,19 @@ The upcoming [ephemeral workspaces](https://www.hashicorp.com/blog/new-terraform
 ## Destroy-only workflows
 
 This is a pattern I use extensively in my workspace creator. As a reminder, this is a “workspace runner” (i.e. a workspace which triggers runs on other workspaces). In my case, when creating a new workspace, I don’t necessarily want it to try to apply immediately, so my configuration looks like this:
+
+```
+resource "tfe_workspace_run" "downstream" {
+  workspace_id = tfe_workspace.downstream.id
+ 
+  # depends_on = creds and other workspace dependencies go here
+ 
+  destroy {
+    wait_for_run = true
+    manual_confirm = false
+  }
+}
+```
 
 The only difference between this and the previous example is the absence of the `apply{}` block. This means that when doing an apply on the workspace runner, Terraform will create a placeholder resource referencing a non-existent apply on the downstream workspace. This may seem pointless as nothing has actually been done yet, but the presence of this resource in Terraform state signals to Terraform that, when it comes time to destroy the workspace runner, it should first kick off a destroy on the downstream workspace.
 
@@ -164,6 +226,53 @@ Some examples, first a simple one, then a complex one:
 
 ![no alt text](/images/posts/2023-07-10/multispace_blog-d6-chain.png)
 
+```
+resource "tfe_workspace_run" "A" {
+  workspace_id = data.tfe_workspace.ws["A"].id
+ 
+  apply {
+    wait_for_run   = true
+    manual_confirm = false
+  }
+ 
+  destroy {
+    wait_for_run   = true
+    manual_confirm = false
+  }
+}
+ 
+resource "tfe_workspace_run" "B" {
+  workspace_id = data.tfe_workspace.ws["B"].id
+ 
+  depends_on = [tfe_workspace_run.A]
+ 
+  apply {
+    wait_for_run   = true
+    manual_confirm = false
+  }
+ 
+  destroy {
+    wait_for_run   = true
+    manual_confirm = false
+  }
+}
+ 
+resource "tfe_workspace_run" "C" {
+  workspace_id = data.tfe_workspace.ws["C"].id
+ 
+  depends_on = [tfe_workspace_run.B]
+ 
+  apply {
+    wait_for_run   = true
+    manual_confirm = false
+  }
+ 
+  destroy {
+    wait_for_run   = true
+    manual_confirm = false
+  }
+}
+```
 
 
 
