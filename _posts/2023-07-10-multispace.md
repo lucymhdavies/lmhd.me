@@ -43,7 +43,7 @@ This alone solves some dependency challenges and is great for simple workflows. 
 
 However, it doesn’t address all situations, which is why Mitchell Hashimoto created the [multispace provider](https://registry.terraform.io/providers/mitchellh/multispace/latest/docs) to handle the kind of cascading creation/destruction workflows that can’t be done with simple run triggers. His example use case involves creating a Kubernetes stack: first you create the underlying virtual machines, then the core kubernetes services, DNS, and ingress. Each of these is its own separate workspace.
 
-This initial implementation has since been refined and incorporated into the official Terraform Cloud/Enterprise provider (also called the “TFE provider”) in the form of the <code>[tfe_workspace_run](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/workspace_run)</code> resource.
+This initial implementation has since been refined and incorporated into the official Terraform Cloud/Enterprise provider (also called the “TFE provider”) in the form of the [`tfe_workspace_run`](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/workspace_run)resource.
 
 For clarity, this post uses the following terminology when referring to the roles a workspace could have in multi-workspace deployments (an individual workspace may have one or more of these roles):
 
@@ -64,7 +64,7 @@ For clarity, this post uses the following terminology when referring to the role
 
 Here’s an example of how run triggers and `tfe_workspace_run` differ: run triggers will always kick off a plan on the downstream workspace once the upstream workspace has completed a successful apply. Sometimes this results in plans on the downstream workspace that are unnecessary (in the case of a do-nothing plan) or that fail (when a downstream workspace has a dependency on multiple upstream workspaces but some upstream workspaces haven’t yet completed their applies).
 
-With `tfe_workspace_run` you can specify when to apply and under what circumstance. For example, with <code>[depends_on](https://developer.hashicorp.com/terraform/language/meta-arguments/depends_on)</code>, a workspace runner could wait until several upstream workspaces have applied before kicking off the downstream workspace. If that is the only benefit relevant to you, chances are that run triggers are probably good enough for your use case; you’re probably fine with a do-nothing or failed plan every now and then.
+With `tfe_workspace_run` you can specify when to apply and under what circumstance. For example, with [`depends_on`](https://developer.hashicorp.com/terraform/language/meta-arguments/depends_on), a workspace runner could wait until several upstream workspaces have applied before kicking off the downstream workspace. If that is the only benefit relevant to you, chances are that run triggers are probably good enough for your use case; you’re probably fine with a do-nothing or failed plan every now and then.
 
 
 
@@ -102,7 +102,7 @@ While you can configure both the apply and destroy behavior for the downstream w
 
 ## tfe_workspace_run in action
 
-The <code>[tfe_workspace_run resource](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/workspace_run)</code> documentation on the Terraform Registry includes a few example code snippets to use as a starting point. At its most basic, the resource looks like this:
+The [`tfe_workspace_run` resource](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/workspace_run) documentation on the Terraform Registry includes a few example code snippets to use as a starting point. At its most basic, the resource looks like this:
 
 ```
 resource "tfe_workspace_run" "ws_run_parent" {
