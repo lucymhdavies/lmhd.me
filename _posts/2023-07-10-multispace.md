@@ -19,7 +19,7 @@ This article was [originally posted on the HashiCorp Blog](https://www.hashicorp
 
 When working with Terraform, [HashiCorp recommends](https://developer.hashicorp.com/terraform/cloud-docs/recommended-practices/part1) keeping your workspaces small and focused on the resources that make up a single component of a larger infrastructure stack. Doing so has many benefits, but this best practice can introduce dependencies between workspaces, which in turn introduces a new challenge: how do you ensure that these interdependent component workspaces are automatically created (or destroyed) in the right order?
 
-I wrote this blog post to present a pattern to reduce operational overhead from managing multi-workspace deployments. When combined with the upcoming [ephemeral workspaces](https://www.hashicorp.com/blog/new-terraform-cloud-capabilities-to-import-view-and-manage-infrastructure), this pattern can also help reduce costs by allowing you to destroy an entire stack of workspaces in a logical order. I’m a HashiCorp Solutions Engineer who uses this pattern frequently, and it's used by Terraform creator and HashiCorp Co-Founder Mitchell Hashimoto, and many others.
+I wrote this blog post to present a pattern to reduce operational overhead from managing multi-workspace deployments. When combined with [ephemeral workspaces](https://www.hashicorp.com/blog/new-terraform-cloud-capabilities-to-import-view-and-manage-infrastructure), a feature coming soon to Terraform Cloud, this pattern can also help reduce costs by allowing you to destroy an entire stack of workspaces in a logical order. I’m a HashiCorp Solutions Engineer who uses this pattern frequently, and it's used by Terraform creator and HashiCorp Co-Founder Mitchell Hashimoto, and many others.
 
 _**Notes: This method is not an official HashiCorp-recommended best practice and** is not intended to be the solution to all use cases. Rather, it’s just one example to explore and build upon. This blog post also includes a simpler solution to the challenge above, which should work for a large number of use cases. While this blog post was written with Terraform Cloud in mind, the same concepts and configuration will also work in Terraform Enterprise as well, depending on your version. Finally, the suggestions presented here all assume a basic understanding of Terraform Cloud, and you can try out the code examples yourself in this [GitHub repository](https://github.com/hashi-strawb/multispace-example)._
 
@@ -61,7 +61,7 @@ For clarity, this post uses the following terminology when referring to the role
 
 ### Applies
 
-Here’s an example of how run triggers and `tfe_workspace_run` differ: run triggers will always kick off a plan on the downstream workspace once the upstream workspace has completed a successful apply. Sometimes this results in plans on the downstream workspace that are unnecessary (in the case of a do-nothing plan) or that fail (when a downstream workspace has a dependency on multiple upstream workspaces but some upstream workspaces haven’t yet completed their applies).
+Here’s an example of how run triggers and `tfe_workspace_run` differ: run triggers will always kick off a plan on the downstream workspace once the upstream workspace has completed a successful apply. Sometimes this results in plans on the downstream workspace that are unnecessary (in the case of a do-nothing plan) or that fail (when a downstream workspace has a dependency on multiple upstream workspaces but some upstream workspaces haven’t yet completed their apply phases).
 
 With `tfe_workspace_run` you can specify when to apply and under what circumstance. For example, with [`depends_on`](https://developer.hashicorp.com/terraform/language/meta-arguments/depends_on), a workspace runner could wait until several upstream workspaces have applied before kicking off the downstream workspace. If that is the only benefit relevant to you, chances are that run triggers are probably good enough for your use case; you’re probably fine with a do-nothing or failed plan every now and then.
 
@@ -89,7 +89,7 @@ You can use the `tfe_workspace_run` resource in two operational modes:
 
 ### Destroys
 
-Run triggers do one thing: they trigger applies on downstream workspaces, and they do it only after the upstream has completed successfully. They do not handle destruction use cases. For example, you should destroy your compute before destroying your virtual network, and run triggers do not give you a means to model that side of the dependency.
+Run triggers do one thing: they trigger apply runs on downstream workspaces, and they do it only after the upstream has completed successfully. They do not handle destruction use cases. For example, you should destroy your compute before destroying your virtual network, and run triggers do not give you a means to model that side of the dependency.
 
 This is where the real power of `tfe_workspace_run` comes in. The resource allows you to kick off a destroy on a downstream workspace and, if you’re using` depends_on`, you can ensure that nothing in the upstream workspace is destroyed until the downstream workspace has successfully finished its destroy.
 
@@ -140,7 +140,7 @@ Beyond the basic examples, this post will present a few patterns with example co
 
 The `tfe_workspace_run` resource is most useful when creating new workspaces. This example uses the TFE provider to create a workspace, set up all the necessary permissions, and configure the [dynamic credentials](https://developer.hashicorp.com/terraform/tutorials/cloud/dynamic-credentials). All of that must be done before the workspace can be applied. 
 
-As a reminder, the term “workspace creator” refers to any workspace responsible for creating other workspaces and related resources. In most cases when using a workspace creator, it will also be a workspace runner for the workspaces it creates (i.e. it is responsible for triggering applies and/or destroys on those workspaces).
+As a reminder, the term “workspace creator” refers to any workspace responsible for creating other workspaces and related resources. In most cases when using a workspace creator, it will also be a workspace runner for the workspaces it creates (i.e. it is responsible for triggering apply and/or destroy runs on those workspaces).
 
 ```
 resource "tfe_workspace_run" "downstream" {
@@ -214,7 +214,7 @@ Similarly, you can also have an apply-only workflow by including an `apply{}` bl
 
 This is the main reason for the concept of a workspace runner separate from the idea of an upstream workspace. The previous examples have a single upstream workspace for every downstream workspace. In cases like that, introducing an additional workspace runner just adds unnecessary complexity; the upstream can handle the runner functionality.
 
-Workspace runners become useful in cases where there are more than two workspaces. While upstream workspaces can handle the runner role functionally, if you have applies or destroys configured to wait for completion, then you’ll have more workspaces in your stack, which results in more concurrent runs. If you have too many, the queue will fill up, and you’ll end up in a deadlock, where downstream workspaces are queued but can never begin, and upstream workspaces are waiting on those downstream workspace runs.
+Workspace runners become useful in cases where there are more than two workspaces. While upstream workspaces can handle the runner role functionally, if you have apply or destroy runs configured to wait for completion, then you’ll have more workspaces in your stack, which results in more concurrent runs. If you have too many, the queue will fill up, and you’ll end up in a deadlock, where downstream workspaces are queued but can never begin, and upstream workspaces are waiting on those downstream workspace runs.
 
 By introducing a separate workspace runner, you can ensure you need to consume only two concurrency slots: one for the runner, and one for whichever other workspace it is currently running.
 
@@ -275,7 +275,7 @@ resource "tfe_workspace_run" "C" {
 
 
 * In this example, to apply, the workspace runner queues a run on A, waits for it to complete, queues a run on B, waits for it to complete, then queues a run on C.
-* If you care only about applies, this is a perfect use case for run triggers.
+* If you care only about the apply phase, this is a perfect use case for run triggers.
 * To destroy, the workspace runner queues a run on C first, then B, then A.
 
 Of course, there’s no reason you’re limited to each workspace having one upstream or one downstream. You may have a complex web of dependencies between your workspaces. Here’s as example (with the code in the repo linked at the end of the post):
@@ -291,7 +291,7 @@ Of course, there’s no reason you’re limited to each workspace having one ups
 * In this example, the workspace runner queues runs on U1, U2, and U3.
 * If there are spare concurrency slots, all three will run concurrently. If not, at least one will wait in the queue.
 * Once all three have finished, then the workspace runner queues runs on D1, D2, and D3.
-* Again, if you just care about applies, run triggers would work, but you would get a lot of failed plans because U1, U2, and U3 finish at different times.
+* Again, if you just care about the apply phase, run triggers would work, but you would get a lot of failed plans because U1, U2, and U3 finish at different times.
 * To destroy, the workspace runner queues a run on D1, D2, and D3 first, then U1, U2, and U3.
 
 
